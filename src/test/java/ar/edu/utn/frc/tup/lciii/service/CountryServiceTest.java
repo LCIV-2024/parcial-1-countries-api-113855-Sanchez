@@ -28,7 +28,7 @@ public class CountryServiceTest {
     @Test
     public void testAllCountries() {
 
-        List<CountryDto> teams = countryService.getAllCountryDto(null);
+        List<CountryDto> teams = countryService.getAllCountryDto(null,null);
         assertEquals(250, teams.size());
 
     }
@@ -36,7 +36,7 @@ public class CountryServiceTest {
     @Test
     public void testCountryByName() {
 
-        List<CountryDto> teams = countryService.getFindName("ARG");
+        List<CountryDto> teams = countryService.getFindName("ARG",null);
         assertEquals(1, teams.size());
         assertEquals("ARG", teams.get(0).getCode());
 

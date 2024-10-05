@@ -22,9 +22,11 @@ public class CountryController {
 
 
     @GetMapping("/api/countries")
-    public List<CountryDto> getCountriesAllByName(@RequestParam(name = "name", required = false) String name) {
+    public List<CountryDto> getCountriesAllByName(
+            @RequestParam(name = "name", required = false) String name,
+            @RequestParam(name="code", required = false) String code) {
 
-        return countryService.getAllCountryDto(name);
+        return countryService.getAllCountryDto(name,code);
     }
 
     @GetMapping ("api/countries/{continent}/continent")
@@ -45,7 +47,7 @@ public class CountryController {
         return  countryService.getMostBorder();
     }
 
-    @PostMapping("/api/countrie")
+    @PostMapping("/api/countries")
     public List<CountryDto> createCountry(@RequestBody @Valid AmountOfCountryToSaveDto amountDto) {
     return countryService.postAmountOfCountryToSave(amountDto);
 

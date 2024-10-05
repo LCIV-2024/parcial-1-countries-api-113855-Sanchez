@@ -56,16 +56,16 @@ public class CountryService {
                 return new CountryDto(country.getCode(), country.getName());
         }
 
-        public List<CountryDto> getAllCountryDto (String name){
-                if (name!=null){
-                        return getFindName(name);
+        public List<CountryDto> getAllCountryDto (String name, String code){
+                if (name!=null||code !=null){
+                        return getFindName(name, code);
                 }
                 return getAllCountries().stream().map(this::mapToDTO).collect(Collectors.toList());
         }
 
-        public List<CountryDto> getFindName (String name){
+        public List<CountryDto> getFindName (String name, String code){
                 List<Country> countries = this.getAllCountries();
-                List<Country> filterCountries = countries.stream().filter(c->c.getName().equals(name)|| c.getCode().equals(name)).toList();
+                List<Country> filterCountries = countries.stream().filter(c->c.getName().equals(name)|| c.getCode().equals(code)).toList();
                 List<CountryDto> filterCountryDto = filterCountries.stream().map(c->mapToDTO(c)).collect(Collectors.toList());
                 return filterCountryDto;
         }
