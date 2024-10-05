@@ -1,13 +1,19 @@
 package ar.edu.utn.frc.tup.lciii.service;
 
+import ar.edu.utn.frc.tup.lciii.Entities.CountryEntity;
+import ar.edu.utn.frc.tup.lciii.dtos.AmountOfCountryToSaveDto;
 import ar.edu.utn.frc.tup.lciii.dtos.CountryDto;
 import ar.edu.utn.frc.tup.lciii.model.Country;
 import ar.edu.utn.frc.tup.lciii.repository.CountryRepository;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +24,8 @@ import java.util.stream.Collectors;
 public class CountryService {
 
 
+        private final ModelMapper modelMapper;
+        private final CountryRepository countryRepository;
         private  RestTemplate restTemplate;
 
         public List<Country> getAllCountries() {
@@ -87,11 +95,24 @@ public class CountryService {
                 return filterCountryDto;
         }
 
-        public CountryDto getMostBorder (){
+        public CountryDto getMostBorder() {
                 List<Country> countries = this.getAllCountries();
-                List<Country> filterCountries = countries.stream().sorted(Comparator.comparing(
-                        Country->Country.getBorders().size())).toList();
+
+                List<Country> filterCountries = countries.stream().filter(c->c.getBorders()!=null)
+                        .sorted(Comparator.comparingInt((Country country) -> country.getBorders().size()).reversed())
+                        .toList();
                 CountryDto filterCountryDto = mapToDTO(filterCountries.get(0));
                 return filterCountryDto;
+        }
+
+
+        public List<CountryDto> postAmountOfCountryToSave(AmountOfCountryToSaveDto dto){
+                List<Country> countries = this.getAllCountries();
+                Collections.shuffle(countries);
+                for (int i=0; i <dto.getAmountOfCountryToSave();i++) {
+                        CountryEntity countryEntity = modelMapper.map(countries.get(i),CountryEntity.class);
+                        countryRepository.save(countryEntity);
+                }
+                return countryRepository.findAll().stream().map(c->modelMapper.map(c,CountryDto.class)).toList();
         }
 }

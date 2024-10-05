@@ -1,6 +1,8 @@
 package ar.edu.utn.frc.tup.lciii.controllers;
+import ar.edu.utn.frc.tup.lciii.dtos.AmountOfCountryToSaveDto;
 import ar.edu.utn.frc.tup.lciii.dtos.CountryDto;
 import ar.edu.utn.frc.tup.lciii.service.CountryService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,5 +43,11 @@ public class CountryController {
     public CountryDto mostBorder () {
 
         return  countryService.getMostBorder();
+    }
+
+    @PostMapping("/api/countrie")
+    public List<CountryDto> createCountry(@RequestBody @Valid AmountOfCountryToSaveDto amountDto) {
+    return countryService.postAmountOfCountryToSave(amountDto);
+
     }
 }
